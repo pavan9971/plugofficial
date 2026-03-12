@@ -1,0 +1,29 @@
+{
+  "name": "jamspace",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@supabase/supabase-js": "^2.98.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "@vitejs/plugin-react": "^5.1.4",
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.13.1",
+    "tailwindcss": "^4.2.1"
+  }
+}
