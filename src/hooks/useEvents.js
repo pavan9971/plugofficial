@@ -11,10 +11,17 @@ export function useEvents(options = {}) {
     let channel
 
     const fetchEvents = async () => {
-      const { data, err } = await supabase
+      let query = supabase
         .from('events')
         .select('*')
         .order('date', { ascending: true })
+
+      if (!admin) {
+        const now = new Date().toISOString()
+        query = query.or(`expiration_date.is.null,expiration_date.gte.${now}`)
+      }
+
+      const { data, err } = await query
       if (err) {
         setError(err)
         setEvents([])

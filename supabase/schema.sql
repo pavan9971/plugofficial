@@ -84,6 +84,8 @@ create table events (
   title text not null,
   category text not null,
   date timestamptz not null,
+  expiration_date timestamptz,
+  price numeric(10, 2),
   location text not null,
   image_url text,
   payment_link text not null,

@@ -83,6 +83,11 @@ export default function AdminDashboard() {
                   <h2 className="font-semibold text-gray-900 truncate">{event.title}</h2>
                   <p className="text-sm text-gray-500">
                     {event.category} • {new Date(event.date).toLocaleString()} • {event.location}
+                    {event.price != null && (
+                      <span className="ml-2 font-medium text-gray-700">
+                        • {event.price === 0 ? 'Free' : `₹${Number(event.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`}
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">

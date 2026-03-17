@@ -25,6 +25,8 @@ export default function AdminEventForm() {
     title: '',
     category: 'Music',
     date: '',
+    expiration_date: '',
+    price: '',
     location: '',
     image_url: '',
     payment_link: '',
@@ -47,10 +49,12 @@ export default function AdminEventForm() {
           if (data) {
             const d = new Date(data.date)
             const localDate = d.toISOString().slice(0, 16)
+            const expDate = data.expiration_date ? new Date(data.expiration_date).toISOString().slice(0, 16) : ''
             setForm({
               title: data.title ?? '',
               category: data.category ?? 'Music',
               date: localDate,
+              expiration_date: expDate,
               location: data.location ?? '',
               image_url: data.image_url ?? '',
               payment_link: data.payment_link ?? '',
@@ -75,6 +79,8 @@ export default function AdminEventForm() {
         title: form.title.trim(),
         category: form.category,
         date: new Date(form.date).toISOString(),
+        expiration_date: form.expiration_date ? new Date(form.expiration_date).toISOString() : null,
+        price: form.price.trim() !== '' ? parseFloat(form.price) : null,
         location: form.location.trim(),
         image_url: form.image_url.trim() || null,
         payment_link: form.payment_link.trim(),
@@ -85,6 +91,19 @@ export default function AdminEventForm() {
         toast.error('Payment link is required')
         setLoading(false)
         return
+      }
+      if (payload.expiration_date && new Date(payload.expiration_date) <= new Date(payload.date)) {
+        toast.error('Expiration date must be after the event date & time')
+        setLoading(false)
+        return
+      }
+      if (form.price.trim() !== '') {
+        const priceNum = parseFloat(form.price)
+        if (isNaN(priceNum) || priceNum < 0) {
+          toast.error('Price must be a valid non-negative number')
+          setLoading(false)
+          return
+        }
       }
       if (isEdit) {
         const { error } = await supabase.from('events').update(payload).eq('id', id)
@@ -144,6 +163,32 @@ export default function AdminEventForm() {
             required
             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#135bec] focus:border-[#135bec]"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Expiration Date</label>
+          <input
+            name="expiration_date"
+            type="datetime-local"
+            value={form.expiration_date}
+            onChange={handleChange}
+            min={form.date || undefined}
+            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#135bec] focus:border-[#135bec]"
+          />
+          <p className="text-xs text-gray-500 mt-1">After this date, the event will be hidden from the public site. Leave empty for no expiration.</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <input
+            name="price"
+            type="number"
+            min="0"
+            step="0.01"
+            value={form.price}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#135bec] focus:border-[#135bec]"
+            placeholder="0.00"
+          />
+          <p className="text-xs text-gray-500 mt-1">Leave empty for free events</p>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>

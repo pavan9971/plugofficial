@@ -17,12 +17,31 @@ const CATEGORIES = [
   'Cinema',
 ]
 
+const PRICE_RANGES = [
+  { value: 'all', label: 'All Prices' },
+  { value: 'free', label: 'Free' },
+  { value: '0-500', label: '₹0 - ₹500' },
+  { value: '501-2000', label: '₹501 - ₹2,000' },
+  { value: 'above-2000', label: 'Above ₹2,000' },
+]
+
+function matchesPriceRange(event, range) {
+  const price = event.price
+  if (range === 'all') return true
+  if (range === 'free') return price == null || price === 0
+  if (range === '0-500') return price != null && price >= 0 && price <= 500
+  if (range === '501-2000') return price != null && price >= 501 && price <= 2000
+  if (range === 'above-2000') return price != null && price > 2000
+  return true
+}
+
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchQuery = (searchParams.get('q') ?? '').toLowerCase().trim()
   const { events, loading, error } = useEvents()
   const [selectedCategory, setSelectedCategory] = useState('All Events')
   const [sortBy, setSortBy] = useState('latest')
+  const [priceRange, setPriceRange] = useState('all')
 
   const filteredAndSorted = useMemo(() => {
     let list = [...events]
@@ -38,13 +57,14 @@ export default function Home() {
     if (selectedCategory !== 'All Events') {
       list = list.filter((e) => e.category === selectedCategory)
     }
+    list = list.filter((e) => matchesPriceRange(e, priceRange))
     if (sortBy === 'latest') {
       list.sort((a, b) => new Date(b.date) - new Date(a.date))
     } else if (sortBy === 'soonest') {
       list.sort((a, b) => new Date(a.date) - new Date(b.date))
     }
     return list
-  }, [events, selectedCategory, sortBy, searchQuery])
+  }, [events, selectedCategory, sortBy, searchQuery, priceRange])
 
   return (
     <div className="antialiased">
@@ -120,6 +140,18 @@ export default function Home() {
                 <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-semibold text-gray-500">Price:</label>
+                <select
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  className="border-none bg-gray-50 rounded-lg text-sm font-medium focus:ring-primary"
+                >
+                  {PRICE_RANGES.map((r) => (
+                    <option key={r.value} value={r.value}>{r.label}</option>
+                  ))}
+                </select>
               </div>
               <div className="flex items-center gap-3">
                 <label className="text-sm font-semibold text-gray-500">Sort by:</label>
