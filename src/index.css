@@ -1,31 +1,11 @@
 @import "tailwindcss";
 
-/* Reality-First Design System — Poster Modernist */
-
 @theme {
-  /* Colors */
-  --color-cream: #E3E2DE;
-  --color-accent: #1351AA;
-  --color-text: #141414;
-  --color-text-secondary: #444343;
-  --color-muted: #7A7A7A;
-  --color-border: #C7C7C7;
-
-  /* Music theme (Spotify-inspired) */
-  --color-music-bg: #121212;
-  --color-music-surface: #181818;
-  --color-music-card: #282828;
-  --color-music-card-hover: #3e3e3e;
-  --color-music-text: #ffffff;
-  --color-music-text-secondary: #b3b3b3;
-  --color-music-accent: #1db954;
-
-  /* Typography */
-  --font-sans: 'General Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', monospace;
-
-  /* Transitions */
-  --transition-fast: 0.3s linear;
+  --color-primary: #135bec;
+  --color-primary-dark: #0f4bc5;
+  --color-primary-light: #e7effd;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --radius-custom: 8px;
 }
 
 @layer base {
@@ -34,7 +14,29 @@
     -webkit-font-smoothing: antialiased;
   }
   body {
-    background-color: var(--color-music-bg);
-    color: var(--color-music-text);
+    background-color: #ffffff;
+    color: #1a1a1a;
   }
+}
+
+.card-shadow {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-shadow:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(19, 91, 236, 0.1), 0 10px 10px -5px rgba(19, 91, 236, 0.04);
+}
+
+.glass-nav {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

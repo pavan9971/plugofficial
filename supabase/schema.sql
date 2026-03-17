@@ -77,3 +77,25 @@ create policy "Anyone can join" on attendees for insert with check (true);
 create policy "Public read suggestions" on suggestions for select using (true);
 create policy "Anyone can suggest" on suggestions for insert with check (true);
 create policy "Anyone manages suggestions" on suggestions for update using (true);
+
+-- Events table for event listing website
+create table events (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  category text not null,
+  date timestamptz not null,
+  location text not null,
+  image_url text,
+  payment_link text not null,
+  description text,
+  created_by uuid references auth.users(id),
+  created_at timestamptz default now()
+);
+
+alter publication supabase_realtime add table events;
+alter table events enable row level security;
+
+create policy "Public read events" on events for select using (true);
+create policy "Authenticated insert events" on events for insert with check (auth.uid() is not null);
+create policy "Authenticated update events" on events for update using (auth.uid() is not null);
+create policy "Authenticated delete events" on events for delete using (auth.uid() is not null);
